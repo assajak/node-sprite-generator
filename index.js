@@ -7,6 +7,8 @@ var Q = require('q');
 var spriteGenerator = function(options){
     this.options = options;
     this.filesArrayForSCSSFile = [];
+    this.tempSpriteName = Math.random();
+    //this.tempSpriteName ='sprite';
 }
 
 spriteGenerator.prototype.start = function(){
@@ -20,7 +22,9 @@ spriteGenerator.prototype.start = function(){
             self.addImageToSprite(sprite, 1).then(function(){
 
             });
-        });
+        }).catch(function (error) {
+            console.log(error);
+        })
     });
 }
 
@@ -30,14 +34,14 @@ spriteGenerator.prototype.addImageToSprite = function(sprite, id){
 
     if (typeof this.files[id] !== 'undefined'){
         gm(sprite)
-          .append( this.options.imagesForSpritePath+self.files[id], true)
-          .write( self.options.out + '/sprite'+id+'.png', function (err) {
-                var sprite = self.options.out + '/sprite'+id+'.png';
+            .append( this.options.imagesForSpritePath+self.files[id], true)
+            .write( self.options.out + '/'+self.tempSpriteName+id+'.png', function (err) {
+                var sprite = self.options.out + '/'+self.tempSpriteName+id+'.png';
                 self.filesArrayForSCSSFile.push(self.files[id]);
                 self.addImageToSprite(sprite, ++id);
                 var lastId = id-2;
-                fs.unlink(self.options.out + '/sprite'+lastId+'.png');
-          });
+                fs.unlink(self.options.out + '/'+self.tempSpriteName+lastId+'.png');
+            });
     }else{
         gm(sprite)
             .resize(self.options.size[0]*self.files, self.options.size[1])
@@ -64,25 +68,25 @@ spriteGenerator.prototype.addImageToSprite = function(sprite, id){
 }
 
 spriteGenerator.prototype.getImages = function(){
-  var deferred = Q.defer();
-  var dir= this.options.imagesForSpritePath;
+    var deferred = Q.defer();
+    var dir= this.options.imagesForSpritePath;
 
-  fs.readdir(dir,function(err,files){
-    deferred.resolve(files);
-  });
+    fs.readdir(dir,function(err,files){
+        deferred.resolve(files);
+    });
 
-  return deferred.promise;
+    return deferred.promise;
 }
 
 spriteGenerator.prototype.firstSpriteImage = function(imageName){
     var deferred = Q.defer();
-    var sprite = this.options.out + '/sprite0.png';
+    var sprite = this.options.out + '/'+this.tempSpriteName+'0.png';
 
     gm(this.options.imagesForSpritePath + '/'+imageName)
         .write(sprite, function (err) {
-           if (!err){
-               deferred.resolve(sprite);
-           }
+            if (!err){
+                deferred.resolve(sprite);
+            }
         });
 
     return deferred.promise;
