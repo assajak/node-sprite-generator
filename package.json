@@ -1,0 +1,33 @@
+{
+  "name": "node-sprite-generator",
+  "description": "Sprite generator for nodejs",
+  "keywords": [
+    "imagemagick",
+    "magick++",
+    "resize",
+    "convert",
+    "sprite"
+  ],
+  "version": "0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/assajak/node-sprite-generator.git"
+  },
+  "author": "Viacheslav Nogin <assajak.wtf@gmail.com>",
+  "contributors": [],
+  "main": "./index.js",
+  "scripts": {
+    "install": "node-gyp rebuild"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {
+    "nan": "~1.1.0",
+    "readable-stream": "*"
+  },
+  "devDependencies": {
+  
+  }
+}
